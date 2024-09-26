@@ -17,8 +17,8 @@ class CausalAttention(nn.Module):
         self.Wv = nn.Linear(self.dim, self.dim)
         self.Wo = nn.Linear(self.dim, self.dim)
 
-        self.register_buffer("bias", torch.tril(torch.ones(self.max_seqlen, self.max_seqlen))
-                                     .view(1, 1, self.max_seqlen, self.max_seqlen))
+        self.register_buffer("bias", torch.tril(torch.ones(self.max_seqlen+1, self.max_seqlen+1))
+                                     .view(1, 1, self.max_seqlen+1, self.max_seqlen+1))
 
     def forward(self, x):
         # [1, 16, 512]

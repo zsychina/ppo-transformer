@@ -31,7 +31,7 @@ class Agent:
                  K_epochs=10,
                  lr_actor=3e-4,
                  lr_critic=1e-3,
-                 seqmaxlen=200,
+                 seqmaxlen=2000,
                  device='cpu',
                  model_path='./checkpoint/'):
         
@@ -99,7 +99,8 @@ class Agent:
     def progressive(self, net, states):
         net_progressive_out = []
         for time_step in range(states.shape[0]):
-            net_step_out = net(states[:time_step+1, :])
+            start = 0 if time_step < self.seqmaxlen else time_step - self.seqmaxlen
+            net_step_out = net(states[start:time_step+1, :])
             net_progressive_out.append(net_step_out)
         net_progressive_out = torch.stack(net_progressive_out)
         return net_progressive_out
