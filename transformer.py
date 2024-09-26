@@ -17,8 +17,8 @@ class CausalAttention(nn.Module):
         self.Wv = nn.Linear(self.dim, self.dim)
         self.Wo = nn.Linear(self.dim, self.dim)
 
-        self.register_buffer("bias", torch.tril(torch.ones(self.max_seqlen+1, self.max_seqlen+1))
-                                     .view(1, 1, self.max_seqlen+1, self.max_seqlen+1))
+        self.register_buffer("bias", torch.tril(torch.ones(self.max_seqlen+10, self.max_seqlen+10))
+                                     .view(1, 1, self.max_seqlen+10, self.max_seqlen+10))
 
     def forward(self, x):
         # [1, 16, 512]
@@ -108,14 +108,6 @@ class RLTransformer(nn.Module):
         x = x.squeeze(0)
         return x[-1, :]
 
-
-
-if __name__ == '__main__':
-    feature_train_1 = torch.rand(20, 8)
-    # feature_train_2 = torch.rand(1, 3, 8)
-    # feature_train = torch.stack([feature_train_1, feature_train_2])
-    rltransformer = RLTransformer(n_layer=1, out_dim=4, n_head=2, dim=256, state_dim=8)
-    print(rltransformer(feature_train_1).shape)
 
 
 
