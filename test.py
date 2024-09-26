@@ -9,7 +9,7 @@ agent = Agent(
     state_dim=env.observation_space.shape[0],
     hidden_dim=128,
     action_dim=env.action_space.n,
-    device='mps'
+    device='cuda'
 )
 
 agent.load()
@@ -30,7 +30,8 @@ for episode_i in range(10):
         state = next_state
         episode_state.append(next_state)
         episode_return += reward
-        
+    
+    del episode_state[:]
     print(f'{episode_i=} {episode_return=}')
 
 env.close()

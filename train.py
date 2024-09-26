@@ -10,7 +10,7 @@ agent = Agent(
     state_dim=env.observation_space.shape[0],
     hidden_dim=128,
     action_dim=env.action_space.n,
-    device='mps',
+    device='cuda',
 )
 
 # pretrain
@@ -19,7 +19,7 @@ agent = Agent(
 reward_per_step = []
 reward_per_episode = []
 
-for episode_i in range(50):
+for episode_i in range(5000):
     state, info = env.reset()
     episode_return = 0
     done = False
@@ -42,13 +42,13 @@ for episode_i in range(50):
         state = next_state
         episode_state.append(next_state)
         
-        
         episode_return += reward
         reward_per_step.append(reward)
         
     print(f'{episode_i=} {episode_return=}')
     reward_per_episode.append(episode_return)
     
+    del episode_state[:]
     agent.update()
 
     if episode_i % 100 == 0:
