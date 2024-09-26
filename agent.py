@@ -1,7 +1,6 @@
 import torch
 import numpy as np
 
-from mlp import MLP
 from transformer import RLTransformer
 
 class RolloutBuffer:
@@ -48,10 +47,6 @@ class Agent:
         self.device = device
         self.model_path = model_path
         self.seqmaxlen =seqmaxlen
-        
-        # self.actor = MLP(state_dim=state_dim, hidden_dim=hidden_dim, out_dim=action_dim).to(device)
-        # self.critic = MLP(state_dim=state_dim, hidden_dim=hidden_dim, out_dim=1).to(device)
-        # self.policy_old = MLP(state_dim=state_dim, hidden_dim=hidden_dim, out_dim=action_dim).to(device)
         
         self.actor = RLTransformer(
             n_layer=1,
