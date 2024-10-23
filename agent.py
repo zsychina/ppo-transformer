@@ -66,19 +66,10 @@ class Agent:
             max_seqlen=self.seqmaxlen,
         ).to(self.device)
         
-        self.policy_old = RLTransformer(
-            n_layer=1,
-            state_dim=self.state_dim,
-            out_dim=self.action_dim,
-            n_head=4,
-            dim=self.hidden_dim,
-            max_seqlen=self.seqmaxlen,
-        ).to(self.device)
         
         self.actor_optim = torch.optim.Adam(self.actor.parameters(), lr=self.lr_actor)
         self.critic_optim = torch.optim.Adam(self.critic.parameters(), lr=self.lr_critic)
         
-        self.policy_old.load_state_dict(self.actor.state_dict())
         self.mse = torch.nn.MSELoss()
         
     def take_action(self, state):
@@ -140,16 +131,13 @@ class Agent:
             self.actor_optim.step()
             self.critic_optim.step()
 
-        self.policy_old.load_state_dict(self.actor.state_dict())
         self.buffer.clear()
         
     def save(self):
-        torch.save(self.policy_old.state_dict(), self.model_path+'actor.pt')
+        torch.save(self.actor.state_dict(), self.model_path+'actor.pt')
         torch.save(self.critic.state_dict(), self.model_path+'critic.pt')
     
     def load(self):
-        self.policy_old.load_state_dict(torch.load(self.model_path+'actor.pt', map_location=lambda storage, loc: storage))
         self.actor.load_state_dict(torch.load(self.model_path+'actor.pt', map_location=lambda storage, loc: storage))
-        
         self.critic.load_state_dict(torch.load(self.model_path+'critic.pt', map_location=lambda storage, loc: storage))
     
